@@ -12,4 +12,8 @@ select typname,
                 join pg_type t on c.opcintype = t.oid
           where amname = 'btree' and t.oid = pg_type.oid
        )
-group by typname;
+group by typname
+union
+  select 'geometry', 'gist'
+union
+  select 'geometry(Geometry,4326)', 'gist';

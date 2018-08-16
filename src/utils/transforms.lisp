@@ -209,6 +209,15 @@
           (ip-end   (int-to-ip (parse-integer end-integer-string))))
       (concatenate 'simple-base-string ip-start "-" ip-end))))
 
+(defun convert-mysql-geometry (mysql-geometry-as-string)
+  "Transform the MYSQL-GEOMETRY-AS-STRING into a suitable representation for
+   PostgreSQL.
+   See https://stackoverflow.com/questions/10216891/postgresql-copy-from-stdin-expressions
+
+  Input:   \"POLYGON((-83.04104755426674 42.32826129762502,-83.04236386207239 42.327690590828354,-83.04251545570035 42.327885465277404,-83.04219557243864 42.328008057710655,-83.04110621668848 42.32833681323786,-83.04104755426674 42.32826129762502))\" ; that's using astext(column)
+  Output:  \"SRID=4326;POLYGON((-83.0410475542667 42.328261297625,-83.0423638620724 42.3276905908284,-83.0425154557003 42.3278854652774,-83.0421955724386 42.3280080577106,-83.0411062166885 42.3283368132379,-83.0410475542667 42.328261297625))\""
+    (format nil "SRID=4326;~a" mysql-geometry-as-string))
+
 (defun convert-mysql-point (mysql-point-as-string)
   "Transform the MYSQL-POINT-AS-STRING into a suitable representation for
    PostgreSQL.

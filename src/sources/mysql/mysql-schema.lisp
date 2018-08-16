@@ -257,10 +257,12 @@
    Mostly we just use the name, but in case of POINT we need to use
    astext(name)."
   (case (intern (string-upcase type) "KEYWORD")
-    (:geometry   (format nil "astext(`~a`) as `~a`" name name))
-    (:point      (format nil "astext(`~a`) as `~a`" name name))
-    (:linestring (format nil "astext(`~a`) as `~a`" name name))
-    (t           (format nil "`~a`" name))))
+    (:point         (format nil "AsText(`~a`) as `~a`" name name))
+    (:linestring    (format nil "AsText(`~a`) as `~a`" name name))
+    (:geometry      (format nil "AsText(`~a`) as `~a`" name name))
+    (:polygon       (format nil "AsText(`~a`) as `~a`" name name))
+    (:multipolygon  (format nil "AsText(`~a`) as `~a`" name name))
+    (t              (format nil "`~a`" name))))
 
 (defun get-column-list (copy)
   "Some MySQL datatypes have a meaningless default output representation, we
@@ -289,4 +291,3 @@
      collect (cond (is-null :null)
 		   (is-empty "")
 		   (t current-col))))
-
