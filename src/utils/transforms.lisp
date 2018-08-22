@@ -216,36 +216,8 @@
 
   Input:   \"POLYGON((-83.04104755426674 42.32826129762502,-83.04236386207239 42.327690590828354,-83.04251545570035 42.327885465277404,-83.04219557243864 42.328008057710655,-83.04110621668848 42.32833681323786,-83.04104755426674 42.32826129762502))\" ; that's using astext(column)
   Output:  \"SRID=4326;POLYGON((-83.0410475542667 42.328261297625,-83.0423638620724 42.3276905908284,-83.0425154557003 42.3278854652774,-83.0421955724386 42.3280080577106,-83.0411062166885 42.3283368132379,-83.0410475542667 42.328261297625))\""
-    (format nil "SRID=4326;~a" mysql-geometry-as-string))
-
-(defun convert-mysql-point (mysql-point-as-string)
-  "Transform the MYSQL-POINT-AS-STRING into a suitable representation for
-   PostgreSQL.
-
-  Input:   \"POINT(48.5513589 7.6926827)\" ; that's using astext(column)
-  Output:  (48.5513589,7.6926827)"
-  (when mysql-point-as-string
-    (let* ((point (subseq mysql-point-as-string 5)))
-      (setf (aref point (position #\Space point)) #\,)
-      point)))
-
-(defun convert-mysql-linestring (mysql-linestring-as-string)
-  "Transform the MYSQL-POINT-AS-STRING into a suitable representation for
-   PostgreSQL.
-
-  Input:   \"LINESTRING(-87.87342467651445 45.79684462673078,-87.87170806274479 45.802110434248966)\" ; that's using astext(column)
-  Output:  [(-87.87342467651445,45.79684462673078),(-87.87170806274479,45.802110434248966)]"
-  (when mysql-linestring-as-string
-    (let* ((data (subseq mysql-linestring-as-string
-                         11
-                         (- (length mysql-linestring-as-string) 1))))
-      (with-output-to-string (s)
-        (write-string "[" s)
-        (loop :for first := t :then nil
-           :for point :in (split-sequence:split-sequence #\, data)
-           :for (x y) := (split-sequence:split-sequence #\Space point)
-           :do (format s "~:[,~;~](~a,~a)" first x y))
-        (write-string "]" s)))))
+    (if mysql-geometry-as-string
+      (format nil "SRID=4326;~a" mysql-geometry-as-string)))
 
 (defun integer-to-string (integer-string)
   "Transform INTEGER-STRING parameter into a proper string representation of

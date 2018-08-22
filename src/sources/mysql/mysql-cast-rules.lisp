@@ -169,16 +169,20 @@
      :using pgloader.transforms::convert-mysql-geometry)
 
     (:source (:type "polygon")
-     :target (:type "geometry(Geometry,4326)")
+     :target (:type "geometry(Polygon,4326)")
      :using pgloader.transforms::convert-mysql-geometry)
 
     (:source (:type "point")
-     :target (:type "point")
-     :using pgloader.transforms::convert-mysql-point)
+     :target (:type "geometry(Point,4326)")
+     :using pgloader.transforms::convert-mysql-geometry)
 
     (:source (:type "linestring")
-     :target (:type "path")
-     :using pgloader.transforms::convert-mysql-linestring))
+     :target (:type "geometry(LineString,4326)")
+     :using pgloader.transforms::convert-mysql-geometry)
+
+    (:source (:type "multilinestring")
+     :target (:type "geometry(MultiLineString,4326)")
+     :using pgloader.transforms::convert-mysql-geometry))
   "Data Type Casting rules to migrate from MySQL to PostgreSQL")
 
 

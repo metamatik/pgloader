@@ -254,15 +254,17 @@
 (defun get-column-sql-expression (name type)
   "Return per-TYPE SQL expression to use given a column NAME.
 
-   Mostly we just use the name, but in case of POINT we need to use
-   astext(name)."
+   Mostly we just use the name, but in case of geometric data types
+   we need to use AsText(name)."
+
   (case (intern (string-upcase type) "KEYWORD")
-    (:point         (format nil "AsText(`~a`) as `~a`" name name))
-    (:linestring    (format nil "AsText(`~a`) as `~a`" name name))
-    (:geometry      (format nil "AsText(`~a`) as `~a`" name name))
-    (:polygon       (format nil "AsText(`~a`) as `~a`" name name))
-    (:multipolygon  (format nil "AsText(`~a`) as `~a`" name name))
-    (t              (format nil "`~a`" name))))
+    (:geometry         (format nil "AsText(`~a`) as `~a`" name name))
+    (:point            (format nil "AsText(`~a`) as `~a`" name name))
+    (:polygon          (format nil "AsText(`~a`) as `~a`" name name))
+    (:multipolygon     (format nil "AsText(`~a`) as `~a`" name name))
+    (:linestring       (format nil "AsText(`~a`) as `~a`" name name))
+    (:multilinestring  (format nil "AsText(`~a`) as `~a`" name name))
+    (t                 (format nil "`~a`" name))))
 
 (defun get-column-list (copy)
   "Some MySQL datatypes have a meaningless default output representation, we
